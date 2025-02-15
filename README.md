@@ -1,160 +1,114 @@
-# DTS React User Guide
+# @future-widget-lab/react-context-provider
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with DTS. Let’s get you oriented with what’s here and how to use it.
+This utility provides a simple and flexible way to create a React context provider with an associated custom hook. It allows defining shared state logic in a structured way while maintaining type safety.
 
-> This DTS setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+## Features
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
+- Simplifies context creation with an intuitive API.
+- Encapsulates state logic inside `useGetState` for clarity.
+- Generates both a Context Provider and a hook for easy consumption.
+- Supports TypeScript for strong typing.
+- Supports render props for greater flexibility.
 
-## Commands
+## Installation
 
-DTS scaffolds your new library inside `/src`, and also sets up a [Vite-based](https://vitejs.dev) playground for it inside `/example`.
-
-The recommended workflow is to run DTS in one terminal:
-
-```bash
-npm start # or yarn start
+```sh
+npm install @future-widget-lab/react-context-provider
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+## Usage
 
-Then run the example inside another:
+### Basic Example
 
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+```tsx
+import { createContextProvider } from '@future-widget-lab/react-context-provider';
+
+const { ContextProvider: CounterProvider, hook: useCounter } = createContextProvider({
+  name: 'counter',
+  useGetState: () => {
+    const [count, setCount] = React.useState(0);
+
+    const increment = () => setCount((prev) => prev + 1);
+
+    const decrement = () => setCount((prev) => prev - 1);
+
+    const reset = () => setCount(0);
+
+    return { count, increment, decrement, reset };
+  }
+});
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure DTS is running in watch mode like we recommend above. 
+### Using the Provider
 
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  index.test.tsx  # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+```tsx
+const App: FC = () => {
+  return (
+    <CounterProvider>
+      <CounterComponent />
+    </CounterProvider>
+  );
+};
 ```
 
-#### React Testing Library
+### Using the Hook
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+```tsx
+const CounterComponent: FC = () => {
+  const { count, increment, decrement, reset } = useCounter();
 
-### Rollup
-
-DTS uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `dts` [optimizations docs](https://github.com/weiran-zsd/dts-cli#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+  return (
+    <section style={{ textAlign: 'center' }}>
+      <h1>Counter: {count}</h1>
+      <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+      <button onClick={reset}>Reset</button>
+    </section>
+  );
+};
 ```
 
-You can also choose to install and use [invariant](https://github.com/weiran-zsd/dts-cli#invariant) and [warning](https://github.com/weiran-zsd/dts-cli#warning) functions.
+### Using Render Props
 
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Deploying the Example Playground
-
-The Playground is just a simple [Vite](https://vitejs.dev) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+```tsx
+const App: FC = () => {
+  return (
+    <CounterProvider>
+      {({ count, increment, decrement, reset }) => {
+        return (
+          <section style={{ textAlign: 'center' }}>
+            <h1>Counter: {count}</h1>
+            <button onClick={increment}>+</button>
+            <button onClick={decrement}>-</button>
+            <button onClick={reset}>Reset</button>
+          </section>
+        );
+      }}
+    </CounterProvider>
+  );
+};
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+## API Reference
 
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
+### `createContextProvider(options: CreateContextProviderOptions<TContext, TProps>)`
 
-## Named Exports
+Creates a new context provider with an associated hook.
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+#### Options
 
-## Including Styles
+| Option        | Type                          | Description                                                  |
+| ------------- | ----------------------------- | ------------------------------------------------------------ |
+| `name`        | `string`                      | The name of the context provider, used for debugging.        |
+| `useGetState` | `(props: TProps) => TContext` | A custom hook that returns the shared state for the context. |
 
-There are many ways to ship styles, including with CSS-in-JS. DTS has no opinion on this, configure how you like.
+### Returned Values
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+| Return Value      | Type               | Description                                                                               |
+| ----------------- | ------------------ | ----------------------------------------------------------------------------------------- |
+| `ContextProvider` | `React.FC<TProps>` | The generated context provider component. Supports both direct children and render props. |
+| `hook`            | `() => TContext`   | A hook to access the context values.                                                      |
 
-## Publishing to NPM
+## License
 
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with DTS within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/formium/tsdx/issues/64)
+MIT
