@@ -1,6 +1,6 @@
 {
   "name": "@future-widget-lab/react-context-provider",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "author": "Carlos Lobo",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+github.com/future-widget-lab/react-context-provider.git"
+    "url": "git+https://github.com/future-widget-lab/react-context-provider.git"
   },
   "scripts": {
     "analyze": "size-limit --why",
@@ -35,16 +35,9 @@
     "semi": true,
     "printWidth": 120,
     "tabWidth": 2,
-    "importOrder": [
-      "<THIRD_PARTY_MODULES>",
-      "^[./]"
-    ],
     "importOrderSeparation": false,
     "importOrderSortSpecifiers": true,
     "importOrderCaseInsensitive": true,
-    "plugins": [
-      "@trivago/prettier-plugin-sort-imports"
-    ],
     "pluginSearchDirs": false,
     "trailingComma": "none"
   },
@@ -69,7 +62,6 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.1.6",
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@tsconfig/recommended": "^1.0.8",
     "@tsconfig/vite-react": "^3.4.0",
     "@types/react": "^18.2.64",
@@ -95,7 +87,6 @@
     "custom-hook",
     "state",
     "context-provider",
-    "fluent-api",
     "create-context"
   ]
 }
