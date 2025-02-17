@@ -1,6 +1,7 @@
 {
   "name": "@future-widget-lab/react-context-provider",
-  "version": "0.1.1",
+  "version": "0.1.3",
+  "description": "Utility to create a react context providers easily.",
   "license": "MIT",
   "author": "Carlos Lobo",
   "main": "dist/index.js",
