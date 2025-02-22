@@ -12,7 +12,7 @@ type CreateHookOptions<TContext> = {
 export const createContextHook = <TContext>(options: CreateHookOptions<TContext>) => {
 	const { name, context } = options;
 
-	const hook = () => {
+	const useHook = () => {
 		const provided = React.useContext<TContext>(context);
 
 		if (!provided) {
@@ -22,7 +22,7 @@ export const createContextHook = <TContext>(options: CreateHookOptions<TContext>
 		return provided;
 	};
 
-	Object.defineProperty(hook, 'name', { value: `use-${name}-context-provider` });
+	Object.defineProperty(useHook, 'name', { value: `use-${name}-context-provider` });
 
-	return hook;
+	return useHook;
 };
