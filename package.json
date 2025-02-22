@@ -1,7 +1,7 @@
 {
   "name": "@future-widget-lab/react-context-provider",
   "version": "0.1.3",
-  "description": "Utility to create a react context providers easily.",
+  "description": "A helper for creating React providers with an associated custom hook.",
   "license": "MIT",
   "author": "Carlos Lobo",
   "main": "dist/index.js",

@@ -1,6 +1,6 @@
 # @future-widget-lab/react-context-provider
 
-This utility provides a simple and flexible way to create a React context provider with an associated custom hook. It allows defining shared state logic in a structured way while maintaining type safety.
+A helper for creating React providers with an associated custom hook. It allows defining shared state logic in a structured way while maintaining type safety.
 
 ## Features
 
